@@ -3,20 +3,19 @@ services:
   # ─── Base de données ────────────────────────────────────────────────────────
   db:
     image: mysql:8.0
-    container_name: projet_db
+    container_name: iran_war_db
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: projet_db
-      MYSQL_USER: projet_user
-      MYSQL_PASSWORD: projet_password
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: iran_war
     volumes:
-      - db_data:/var/lib/mysql
+      - iran_war_data:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
-      - projet_net
+      - iran_war_net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,7 +25,7 @@ services:
     build:
       context: .
       dockerfile: docker/apache-php.Dockerfile
-    container_name: projet_frontoffice
+    container_name: iran_war_frontoffice
     restart: unless-stopped
     ports:
       - "8080:80"
@@ -35,22 +34,22 @@ services:
       - ./docker/frontoffice.conf:/etc/apache2/sites-enabled/000-default.conf:ro
     environment:
       DB_HOST: db
-      DB_NAME: projet_db
-      DB_USER: projet_user
-      DB_PASS: projet_password
+      DB_NAME: iran_war
+      DB_USER: root
+      DB_PASS: ""
       APP_ENV: development
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - projet_net
+      - iran_war_net
 
   # ─── Back Office ────────────────────────────────────────────────────────────
   backoffice:
     build:
       context: .
       dockerfile: docker/apache-php.Dockerfile
-    container_name: projet_backoffice
+    container_name: iran_war_backoffice
     restart: unless-stopped
     ports:
       - "8081:80"
@@ -59,19 +58,19 @@ services:
       - ./docker/backoffice.conf:/etc/apache2/sites-enabled/000-default.conf:ro
     environment:
       DB_HOST: db
-      DB_NAME: projet_db
-      DB_USER: projet_user
-      DB_PASS: projet_password
+      DB_NAME: iran_war
+      DB_USER: root
+      DB_PASS: ""
       APP_ENV: development
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - projet_net
+      - iran_war_net
 
 volumes:
-  db_data:
+  iran_war_data:
 
 networks:
-  projet_net:
+  iran_war_net:
     driver: bridge
