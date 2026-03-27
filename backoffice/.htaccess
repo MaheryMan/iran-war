@@ -1,0 +1,62 @@
+Options -Indexes
+
+# ─── Activation du moteur de réécriture ──────────────────────────────────────
+RewriteEngine On
+
+# ─── Le backoffice ne doit pas être indexé ───────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+# ─── Fichiers et dossiers réels → pas de réécriture ─────────────────────────
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ─── Front controller : tout vers index.php ──────────────────────────────────
+RewriteRule ^ index.php [QSA,L]
+
+# ─── Compression Gzip ────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css
+    AddOutputFilterByType DEFLATE text/javascript application/javascript application/json
+</IfModule>
+
+# ─── Cache navigateur ────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg           "access plus 1 month"
+    ExpiresByType image/png            "access plus 1 month"
+    ExpiresByType image/x-icon         "access plus 1 year"
+    ExpiresByType font/woff2           "access plus 1 year"
+    ExpiresByType text/css             "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/html            "access plus 0 seconds"
+</IfModule>
+
+# ─── Headers sécurité ────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    # DENY car le backoffice ne doit jamais être intégré en iframe
+    Header always set X-Frame-Options "DENY"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "no-referrer"
+
+    <FilesMatch "\.(css|js|woff|woff2|png|jpg|jpeg|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    <FilesMatch "\.php$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    </FilesMatch>
+
+    Header unset Server
+    Header always unset X-Powered-By
+</IfModule>
+
+# ─── Protection des fichiers sensibles ───────────────────────────────────────
+<FilesMatch "(^\.htaccess|\.env|composer\.(json|lock)|package\.json)$">
+    Require all denied
+</FilesMatch>
+
+FileETag None
+Header unset ETag

@@ -1,0 +1,81 @@
+Options -Indexes
+
+# ─── Activation du moteur de réécriture ──────────────────────────────────────
+RewriteEngine On
+
+# ─── Variables utiles ────────────────────────────────────────────────────────
+# Détecte si on est derrière un proxy (utile en prod avec load balancer)
+RewriteCond %{HTTP:X-Forwarded-Proto} =https
+RewriteRule ^ - [E=HTTPS:on]
+
+# ─── Redirection www → non-www (ou inverse, choisir un seul) ─────────────────
+# Décommenter si besoin (adapter le domaine)
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# ─── Forcer HTTPS en production ───────────────────────────────────────────────
+# Décommenter en prod
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ─── Fichiers et dossiers réels → pas de réécriture ─────────────────────────
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ─── Front controller : tout vers index.php ──────────────────────────────────
+RewriteRule ^ index.php [QSA,L]
+
+# ─── Compression Gzip (deflate) ──────────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml
+    AddOutputFilterByType DEFLATE text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ─── Cache navigateur ────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg           "access plus 1 month"
+    ExpiresByType image/png            "access plus 1 month"
+    ExpiresByType image/webp           "access plus 1 month"
+    ExpiresByType image/svg+xml        "access plus 1 month"
+    ExpiresByType image/x-icon         "access plus 1 year"
+    ExpiresByType font/woff2           "access plus 1 year"
+    ExpiresByType text/css             "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/html            "access plus 0 seconds"
+</IfModule>
+
+# ─── Headers de sécurité & SEO ───────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Cache long sur les assets statiques (fingerprinting recommandé en prod)
+    <FilesMatch "\.(css|js|woff|woff2|ttf|eot|png|jpg|jpeg|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=2592000, immutable"
+    </FilesMatch>
+
+    # Pas de cache sur les pages PHP
+    <FilesMatch "\.php$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+
+    # Suppression de la signature serveur
+    Header unset Server
+    Header always unset X-Powered-By
+</IfModule>
+
+# ─── Protection des fichiers sensibles ───────────────────────────────────────
+<FilesMatch "(^\.htaccess|\.env|composer\.(json|lock)|package\.json)$">
+    Require all denied
+</FilesMatch>
+
+# ─── Désactiver les ETags (évite les problèmes de cache entre serveurs) ───────
+FileETag None
+Header unset ETag
