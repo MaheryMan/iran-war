@@ -58,5 +58,7 @@ RewriteRule ^ index.php [QSA,L]
     Require all denied
 </FilesMatch>
 
+
+
 FileETag None
 Header unset ETag
