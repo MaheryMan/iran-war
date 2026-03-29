@@ -15,7 +15,7 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
 # ─── daty yyyy/mm/dd + slug _ id .html ny rewriting ────────────────────────────────────
-RewriteRule ^([0-9]{4})/([0-9]{2})/([0-9]{2})/([_a-z0-9-]+)_([0-9]+)\.html$ article.php?id=$5&slug=$4&date=$1-$2-$3 [L,QSA]
+RewriteRule ^([0-9]{4})/([0-9]{2})/([0-9]{2})/([_a-z0-9-]+)_([0-9]+)\.html$ pages/article.php?id=$5&slug=$4&date=$1-$2-$3 [L,QSA]
 
 # ─── Front controller : tout vers index.php ──────────────────────────────────
 RewriteRule ^ index.php [QSA,L]

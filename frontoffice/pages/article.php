@@ -35,6 +35,14 @@ if (!$article) {
     exit('Article non trouvé');
 }
 
+// Si le slug en URL ne correspond pas au slug en base, rediriger vers la bonne URL
+if ($slug && $article['slug'] !== $slug) {
+    $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d', strtotime($article['date_creation']));
+    $dateParts = explode('-', $date);
+    header('Location: /' . $dateParts[0] . '/' . $dateParts[1] . '/' . $dateParts[2] . '/' . $article['slug'] . '_' . $article['id'] . '.html');
+    exit;
+}
+
 // Récupérer le contenu de l'article
 $contentQuery = $pdo->prepare('
     SELECT type_balise, valeur, alt_text, ordre

@@ -89,7 +89,7 @@ $articles = $query->fetchAll();
                         <article class="article-list-item" data-title="<?php echo htmlspecialchars($article['titre_navigation']); ?>" data-date="<?php echo $article['date_creation']; ?>">
                             <div class="article-list-content">
                                 <h2>
-                                    <a href="/pages/article.php?slug=<?php echo urlencode($article['slug']); ?>">
+                                    <a href="/<?php echo date('Y/m/d', strtotime($article['date_creation'])); ?>/<?php echo htmlspecialchars($article['slug']); ?>_<?php echo $article['id']; ?>.html">
                                         <?php echo htmlspecialchars($article['titre_navigation']); ?>
                                     </a>
                                 </h2>
@@ -102,7 +102,7 @@ $articles = $query->fetchAll();
                                 <p class="article-list-excerpt">
                                     <?php echo htmlspecialchars($article['meta_description']); ?>
                                 </p>
-                                <a href="/pages/article.php?slug=<?php echo urlencode($article['slug']); ?>" class="read-more-link">
+                                <a href="/<?php echo date('Y/m/d', strtotime($article['date_creation'])); ?>/<?php echo htmlspecialchars($article['slug']); ?>_<?php echo $article['id']; ?>.html" class="read-more-link">
                                     Lire l'article complet →
                                 </a>
                             </div>
