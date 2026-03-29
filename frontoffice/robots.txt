@@ -1,0 +1,35 @@
+# robots.txt - Iran War Blog
+# https://www.robotstxt.org/
+
+# Configuration pour tous les robots
+User-agent: *
+
+# Pages autorisées à indexer
+Allow: /
+
+# Dossiers/fichiers à bloquer
+Disallow: /admin/
+Disallow: /backoffice/
+Disallow: /assets/
+Disallow: /includes/
+Disallow: /db/
+Disallow: /*.php$
+Disallow: /pages/
+
+# Paramètres à ignorer
+Disallow: /*?*
+Disallow: /*&*
+
+# Fichiers sensibles
+Disallow: /.env
+Disallow: /.git
+Disallow: /.htaccess
+Disallow: /config.php
+
+# Contrôle du crawl
+Crawl-delay: 1
+
+# Sitemap (à générer si vous avez une sitemap)
+# Sitemap: https://localhost:8080/sitemap.xml
+
+# Commentaire: Les articles sont accessibles via /YYYY/MM/DD/slug_id.html

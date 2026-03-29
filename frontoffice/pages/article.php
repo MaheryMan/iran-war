@@ -69,7 +69,7 @@ $contenus = $contentQuery->fetchAll();
         <nav class="navbar">
             <div class="container">
                 <div class="logo">
-                    <h1><a href="/">Iran War</a></h1>
+                    <h1><a href="/" class="accueil-header">Iran War</a></h1>
                     <p class="tagline">Actualités et Analyse</p>
                 </div>
                 <ul class="nav-links">
