@@ -3,10 +3,7 @@ Options -Indexes
 # ─── Activation du moteur de réécriture ──────────────────────────────────────
 RewriteEngine On
 
-# ─── Le backoffice ne doit pas être indexé ───────────────────────────────────
-<IfModule mod_headers.c>
-    Header always set X-Robots-Tag "noindex, nofollow"
-</IfModule>
+
 
 # ─── Fichiers et dossiers réels → pas de réécriture ─────────────────────────
 RewriteCond %{REQUEST_FILENAME} -f [OR]

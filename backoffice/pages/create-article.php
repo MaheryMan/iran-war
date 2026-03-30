@@ -14,45 +14,95 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Formulaire de création d'article">
-    <title>Creation d'un article</title>
+    <meta name="description" content="Créer un nouvel article pour le site Iran War">
+    <meta name="theme-color" content="#2563eb">
+    <title>Créer un article - Backoffice Iran War</title>
+    <link rel="stylesheet" href="/assets/backoffice.css">
     <script src="https://cdn.tiny.cloud/1/<?php echo $tinyMceApiKey; ?>/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
-    <h1>Création d'un article</h1>
-  <p>
-    <a href="/pages/articles.php">Voir la liste des articles</a>
-  </p>
+    <header>
+        <nav>
+            <h1>Backoffice Iran War</h1>
+            <ul class="nav-links">
+                <li><a href="/pages/articles.php">Articles</a></li>
+                <li><a href="/traitements/deconnexion.php" role="button" class="action-link">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <?php if ($errorMessage !== ''): ?>
-    <p style="color:#b00020;background:#ffe6e9;padding:10px;border:1px solid #ffb3bd;max-width:900px;">
-      <?php echo $errorMessage; ?>
-    </p>
-  <?php endif; ?>
+    <main class="container">
+        <div class="breadcrumbs mb-30">
+            <a href="/pages/articles.php">Articles</a>
+            <span>/</span>
+            <span>Créer un article</span>
+        </div>
 
-  <?php if ($successMessage !== ''): ?>
-    <p style="color:#0b5d1e;background:#e7f8eb;padding:10px;border:1px solid #b4e3bf;max-width:900px;">
-      <?php echo $successMessage; ?>
-    </p>
-  <?php endif; ?>
+        <h1>Création d'un nouvel article</h1>
 
-  <form id="articleForm" action="/traitements/traitement-html.php" method="post">
-        <label for="title">Titre de l'article:</label><br>
-        <input type="text" id="title" name="title" required><br><br>
+        <?php if ($errorMessage !== ''): ?>
+            <div class="alert alert-error" role="alert">
+                <span>⚠️</span>
+                <span><?php echo $errorMessage; ?></span>
+            </div>
+        <?php endif; ?>
 
-        <label for="description">Description de l'article:</label><br>
-        <textarea id="description" name="description"></textarea><br><br>
+        <?php if ($successMessage !== ''): ?>
+            <div class="alert alert-success" role="alert">
+                <span>✓</span>
+                <span><?php echo $successMessage; ?></span>
+            </div>
+        <?php endif; ?>
 
+        <form id="articleForm" action="/traitements/traitement-html.php" method="post">
+            <div class="form-group">
+                <label for="title">Titre de l'article *</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    required
+                    aria-required="true"
+                    placeholder="Ex: Les tensions au Moyen-Orient..."
+                    maxlength="255"
+                >
+                <small class="text-muted">Le titre s'affichera dans la navigation</small>
+            </div>
 
-        <label for="content">Contenu de l'article:</label><br>
-        <textarea id="content" name="content" required></textarea><br><br>
+            <div class="form-group">
+                <label for="description">Description - Meta description *</label>
+                <textarea 
+                    id="description" 
+                    name="description"
+                    placeholder="Écrivez une description courte (150-160 caractères)"
+                    maxlength="160"
+                    rows="2"
+                    aria-describedby="description-help"
+                ></textarea>
+                <small class="text-muted">Utilisée pour le SEO et les résultats de recherche</small>
+            </div>
 
-        <input type="submit" value="Créer l'article">
-    </form>
+            <div class="form-group">
+                <label for="content">Contenu de l'article *</label>
+                <textarea 
+                    id="content" 
+                    name="content" 
+                    required
+                    aria-required="true"
+                    placeholder="Rédigez le contenu de votre article..."
+                ></textarea>
+            </div>
+
+            <div class="flex gap-12">
+                <button type="submit" class="btn btn-primary">Créer l'article</button>
+                <a href="/pages/articles.php" class="btn btn-secondary">Annuler</a>
+            </div>
+        </form>
+    </main>
 
     <script>
   tinymce.init({
@@ -61,35 +111,25 @@ if (!isset($_SESSION['user_id'])) {
     menubar: true,
     image_title: true,
     automatic_uploads: true,
-    // Use an absolute path because this page lives under /pages/
     images_upload_url: '/upload_handler.php',
-
-    // Plugins principaux (ajuste selon ton besoin)
     plugins: [
       'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
       'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
       'insertdatetime', 'media', 'table', 'help', 'wordcount',
       'emoticons', 'codesample', 'quickbars'
     ],
-
     toolbar:
       'undo redo | blocks | ' +
       'bold italic underline strikethrough | ' +
       'alignleft aligncenter alignright alignjustify | ' +
       'link image| code | help',
-
-    // Configuration utile
     branding: false,
     browser_spellcheck: true,
     contextmenu: 'link image table',
     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-
-    // Important: synchronise automatiquement le textarea
     setup: function (editor) {
       editor.on('change input undo redo', function () {
-        editor.save(); // met a jour la valeur du textarea
-
-        // Optionnel: copie dans le champ cache
+        editor.save();
         const html = editor.getContent();
         const hidden = document.getElementById('content_html');
         if (hidden) hidden.value = html;
@@ -113,7 +153,7 @@ if (!isset($_SESSION['user_id'])) {
         const alt = (img.getAttribute('alt') || '').trim();
         if (!alt) {
           event.preventDefault();
-          alert("Avertissement : ajoute un texte alternatif (alt) a chaque image avant d'enregistrer.");
+          alert('⚠️ Attention: Ajoutez un texte alternatif (alt) à chaque image avant d\'enregistrer.');
           return;
         }
       }

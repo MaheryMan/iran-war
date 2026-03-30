@@ -2,7 +2,6 @@
 session_start();
 require_once __DIR__ . '/../includes/article_repository.php';
 
-
 if (!isset($_SESSION['user_id'])) {
     header('Location: /pages/connexion.php?error=' . rawurlencode('Veuillez vous connecter pour accéder au backoffice.'));
     exit;
@@ -17,68 +16,93 @@ $articles = getAllArticles();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backoffice - Liste des articles</title>
+    <meta name="description" content="Gestion des articles du backoffice Iran War">
+    <meta name="theme-color" content="#2563eb">
+    <title>Articles - Backoffice Iran War</title>
+    <link rel="stylesheet" href="/assets/backoffice.css">
 </head>
 <body>
-    <h1>Liste des articles</h1>
-    <p>
-        <a href="/pages/create-article.php">Créer un article</a>
-    </p>
+    <header>
+        <nav>
+            <h1>Backoffice Iran War</h1>
+            <ul class="nav-links">
+                <li><a href="/pages/articles.php">Articles</a></li>
+                <li><a href="/traitements/deconnexion.php" role="button" class="action-link">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <?php if ($errorMessage !== ''): ?>
-        <p style="color:#b00020;background:#ffe6e9;padding:10px;border:1px solid #ffb3bd;max-width:900px;">
-            <?php echo $errorMessage; ?>
-        </p>
-    <?php endif; ?>
+    <main class="container">
+        <div class="flex justify-between align-center mb-30">
+            <h1>Liste des articles</h1>
+            <a href="/pages/create-article.php" class="btn btn-primary">+ Créer un article</a>
+        </div>
 
-    <?php if ($successMessage !== ''): ?>
-        <p style="color:#0b5d1e;background:#e7f8eb;padding:10px;border:1px solid #b4e3bf;max-width:900px;">
-            <?php echo $successMessage; ?>
-        </p>
-    <?php endif; ?>
+        <?php if ($errorMessage !== ''): ?>
+            <div class="alert alert-error" role="alert">
+                <span>⚠️</span>
+                <span><?php echo $errorMessage; ?></span>
+            </div>
+        <?php endif; ?>
 
-    <?php if (empty($articles)): ?>
-        <p>Aucun article pour le moment.</p>
-    <?php else: ?>
-        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;max-width:1100px;width:100%;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Titre</th>
-                    <th>Slug</th>
-                    <th>Date creation</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($articles as $article): ?>
-                    <tr>
-                        <td><?php echo (int) $article['id']; ?></td>
-                        <td><?php echo htmlspecialchars($article['titre_navigation'], ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($article['slug'], ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars((string) $article['date_creation'], ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td>
-                            <a href="/pages/edit-article.php?id=<?php echo (int) $article['id']; ?>">Modifier</a>
-                            |
-                            <form
-                                action="/traitements/traitement-delete-article.php"
-                                method="post"
-                                style="display:inline;"
-                                onsubmit="return confirm('Supprimer cet article ? Cette action est irreversible.');"
-                            >
-                                <input type="hidden" name="id" value="<?php echo (int) $article['id']; ?>">
-                                <button
-                                    type="submit"
-                                    style="background:none;border:0;color:#b00020;cursor:pointer;padding:0;text-decoration:underline;"
-                                >
-                                    Supprimer
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+        <?php if ($successMessage !== ''): ?>
+            <div class="alert alert-success" role="alert">
+                <span>✓</span>
+                <span><?php echo $successMessage; ?></span>
+            </div>
+        <?php endif; ?>
+
+        <?php if (empty($articles)): ?>
+            <div class="empty-state">
+                <h2>Aucun article trouvé</h2>
+                <p>Commencez par créer votre premier article.</p>
+                <a href="/pages/create-article.php" class="btn btn-primary">Créer un article</a>
+            </div>
+        <?php else: ?>
+            <div class="table-wrapper">
+                <table role="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Titre</th>
+                            <th scope="col">Slug</th>
+                            <th scope="col">Date de création</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($articles as $article): ?>
+                            <tr>
+                                <td><?php echo (int) $article['id']; ?></td>
+                                <td><?php echo htmlspecialchars($article['titre_navigation'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><code><?php echo htmlspecialchars($article['slug'], ENT_QUOTES, 'UTF-8'); ?></code></td>
+                                <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($article['date_creation'])), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="/pages/edit-article.php?id=<?php echo (int) $article['id']; ?>" class="action-link">Modifier</a>
+                                        <form
+                                            action="/traitements/traitement-delete-article.php"
+                                            method="post"
+                                            style="display:inline;margin:0;"
+                                            onsubmit="return confirm('Supprimer cet article ? Cette action est irréversible.');"
+                                        >
+                                            <input type="hidden" name="id" value="<?php echo (int) $article['id']; ?>">
+                                            <button
+                                                type="submit"
+                                                class="btn-delete"
+                                                aria-label="Supprimer l'article <?php echo htmlspecialchars($article['titre_navigation'], ENT_QUOTES, 'UTF-8'); ?>"
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </main>
 </body>
 </html>
