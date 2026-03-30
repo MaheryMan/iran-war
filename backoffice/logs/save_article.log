@@ -1,0 +1,6 @@
+{"time":"2026-03-30T08:44:17+00:00","event":"save_request_received","context":{"debug_id":"da95eb88cbf6","title_length":145,"description_length":293,"content_length":867}}
+{"time":"2026-03-30T08:44:17+00:00","event":"description_built","context":{"debug_id":"da95eb88cbf6","description_final_length":441}}
+{"time":"2026-03-30T08:44:17+00:00","event":"images_validation_start","context":{"debug_id":"da95eb88cbf6","images_count":1}}
+{"time":"2026-03-30T08:44:17+00:00","event":"transaction_begin","context":{"debug_id":"da95eb88cbf6"}}
+{"time":"2026-03-30T08:44:17+00:00","event":"save_exception","context":{"debug_id":"da95eb88cbf6","error":"SQLSTATE[22001]: String data, right truncated: 1406 Data too long for column 'meta_description' at row 1","trace":"#0 /var/www/html/traitements/traitement-html.php(177): PDOStatement->execute(Array)\n#1 /var/www/html/traitements/traitement-html.php(22): insererArticle('EN DIRECT, guer...', '<h1 id=\"js-titl...', 'EN DIRECT, guer...', 'da95eb88cbf6')\n#2 {main}"}}
+{"time":"2026-03-30T08:44:17+00:00","event":"save_failed","context":{"debug_id":"da95eb88cbf6","message":"Une erreur est survenue lors de l'enregistrement. (ref: da95eb88cbf6)"}}

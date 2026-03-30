@@ -96,27 +96,7 @@ $contenus = $contentQuery->fetchAll();
                     echo '<p>Contenu non disponible</p>';
                 else:
                     foreach ($contenus as $contenu):
-                        switch ($contenu['type_balise']) {
-                            case 'h2':
-                                echo '<h2>' . htmlspecialchars($contenu['valeur']) . '</h2>';
-                                break;
-                            case 'h3':
-                                echo '<h3>' . htmlspecialchars($contenu['valeur']) . '</h3>';
-                                break;
-                            case 'p':
-                                echo '<p>' . $contenu['valeur'] . '</p>';
-                                break;
-                            case 'img':
-                                echo '<figure><img src="' . htmlspecialchars($contenu['valeur']) . '" alt="' . htmlspecialchars($contenu['alt_text']) . '"><figcaption>' . htmlspecialchars($contenu['alt_text']) . '</figcaption></figure>';
-                                break;
-                            case 'blockquote':
-                                echo '<blockquote>' . $contenu['valeur'] . '</blockquote>';
-                                break;
-                            case 'ul':
-                            case 'ol':
-                                echo '<' . $contenu['type_balise'] . '>' . $contenu['valeur'] . '</' . $contenu['type_balise'] . '>';
-                                break;
-                        }
+                        echo $contenu['valeur'];
                     endforeach;
                 endif;
                 ?>

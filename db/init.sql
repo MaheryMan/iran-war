@@ -2,7 +2,7 @@ CREATE TABLE articles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titre_navigation VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,      
-    meta_description VARCHAR(160),          
+    meta_description VARCHAR(1000) NOT NULL,       
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
