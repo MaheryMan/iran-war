@@ -12,9 +12,9 @@ $resultat = insererArticle($titre, $contenu, $description);
 
 if ($resultat !== true) {
     $message = is_string($resultat) ? $resultat : "Une erreur est survenue lors de l'enregistrement.";
-    header('Location: /pages/articles.php?error=' . rawurlencode($message));
+    header('Location: /articles?error=' . rawurlencode($message));
     exit;
 }
 
-header('Location: /pages/articles.php?success=' . rawurlencode('Article cree avec succes.'));
+header('Location: /articles?success=' . rawurlencode('Article cree avec succes.'));
 exit;

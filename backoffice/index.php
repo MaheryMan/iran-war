@@ -1,1 +1,1 @@
-<?php header('Location: /pages/connexion.php'); ?>
+<?php header('Location: /connexion'); ?>

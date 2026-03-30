@@ -7,7 +7,7 @@ $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error'], ENT_QUO
 $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success'], ENT_QUOTES, 'UTF-8') : '';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /pages/connexion.php?error=' . rawurlencode('Veuillez vous connecter pour accéder au backoffice.'));
+    header('Location: /connexion?error=' . rawurlencode('Veuillez vous connecter pour acceder au backoffice.'));
     exit;
 }
 
@@ -29,7 +29,8 @@ if (!isset($_SESSION['user_id'])) {
         <nav>
             <h1>Backoffice Iran War</h1>
             <ul class="nav-links">
-                <li><a href="/pages/articles.php">Articles</a></li>
+                <li><a href="/articles">Articles</a></li>
+                <li><a href="http://localhost:8080" class="btn-frontoffice">Voir le site</a></li>
                 <li><a href="/traitements/deconnexion.php" role="button" class="action-link">Déconnexion</a></li>
             </ul>
         </nav>
@@ -37,7 +38,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <main class="container">
         <div class="breadcrumbs mb-30">
-            <a href="/pages/articles.php">Articles</a>
+            <a href="/articles">Articles</a>
             <span>/</span>
             <span>Créer un article</span>
         </div>
@@ -99,7 +100,7 @@ if (!isset($_SESSION['user_id'])) {
 
             <div class="flex gap-12">
                 <button type="submit" class="btn btn-primary">Créer l'article</button>
-                <a href="/pages/articles.php" class="btn btn-secondary">Annuler</a>
+                <a href="/articles" class="btn btn-secondary">Annuler</a>
             </div>
         </form>
     </main>

@@ -10,8 +10,18 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# ─── Front controller : tout vers index.php ──────────────────────────────────
-RewriteRule ^ index.php [QSA,L]
+# ─── URLs simples du backoffice ─────────────────────────────────────────────
+# /connexion → pages/connexion.php
+RewriteRule ^connexion/?$ pages/connexion.php [L,QSA]
+
+# /articles → pages/articles.php
+RewriteRule ^articles/?$ pages/articles.php [L,QSA]
+
+# /articles/creer → pages/create-article.php
+RewriteRule ^articles/creer/?$ pages/create-article.php [L,QSA]
+
+# /articles/id/editer → pages/edit-article.php?id=...
+RewriteRule ^articles/([0-9]+)/editer/?$ pages/edit-article.php?id=$1 [L,QSA]
 
 # ─── Compression Gzip ────────────────────────────────────────────────────────
 <IfModule mod_deflate.c>

@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../includes/article_repository.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /pages/connexion.php?error=' . rawurlencode('Veuillez vous connecter pour accéder au backoffice.'));
+    header('Location: /connexion?error=' . rawurlencode('Veuillez vous connecter pour acceder au backoffice.'));
     exit;
 }
 
@@ -12,13 +12,13 @@ $tinyMceApiKey = htmlspecialchars($tinyMceApiKey, ENT_QUOTES, 'UTF-8');
 
 $idArticle = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($idArticle <= 0) {
-    header('Location: /pages/articles.php?error=' . rawurlencode('Article invalide.'));
+    header('Location: /articles?error=' . rawurlencode('Article invalide.'));
     exit;
 }
 
 $article = getArticleById($idArticle);
 if (!$article) {
-    header('Location: /pages/articles.php?error=' . rawurlencode("L'article est introuvable."));
+    header('Location: /articles?error=' . rawurlencode("L'article est introuvable."));
     exit;
 }
 
@@ -48,7 +48,8 @@ $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success'], E
         <nav>
             <h1>Backoffice Iran War</h1>
             <ul class="nav-links">
-                <li><a href="/pages/articles.php">Articles</a></li>
+                <li><a href="/articles">Articles</a></li>
+                <li><a href="http://localhost:8080" class="btn-frontoffice">Voir le site</a></li>
                 <li><a href="/traitements/deconnexion.php" role="button" class="action-link">Déconnexion</a></li>
             </ul>
         </nav>
@@ -56,7 +57,7 @@ $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success'], E
 
     <main class="container">
         <div class="breadcrumbs mb-30">
-            <a href="/pages/articles.php">Articles</a>
+            <a href="/articles">Articles</a>
             <span>/</span>
             <span>Modifier l'article #<?php echo (int) $article['id']; ?></span>
         </div>
@@ -119,7 +120,7 @@ $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success'], E
 
             <div class="flex gap-12">
                 <button type="submit" class="btn btn-primary">Mettre à jour l'article</button>
-                <a href="/pages/articles.php" class="btn btn-secondary">Retour</a>
+                <a href="/articles" class="btn btn-secondary">Retour</a>
             </div>
         </form>
     </main>

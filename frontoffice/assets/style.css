@@ -150,21 +150,21 @@ body {
 
 .btn-primary {
     display: inline-block;
-    background-color: #ff6b6b;
+    background-color: #d32f2f;
     color: #ffffff;
     padding: 15px 40px;
     border-radius: 5px;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
-    border: 2px solid #ff6b6b;
+    border: 2px solid #d32f2f;
 }
 
 .btn-primary:hover {
     background-color: transparent;
-    color: #ff6b6b;
+    color: #d32f2f;
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 6px 12px rgba(211, 47, 47, 0.3);
 }
 
 /* ========================================

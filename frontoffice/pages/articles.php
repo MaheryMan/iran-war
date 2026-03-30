@@ -1,14 +1,7 @@
 <?php
-require_once '../config.php';
+require_once '../includes/article_repository.php';
 
-// Récupérer tous les articles
-$query = $pdo->prepare('
-    SELECT id, titre_navigation, slug, meta_description, date_creation 
-    FROM articles 
-    ORDER BY date_creation DESC
-');
-$query->execute();
-$articles = $query->fetchAll();
+$articles = getAllArticles();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -31,6 +24,7 @@ $articles = $query->fetchAll();
                 </div>
                 <ul class="nav-links">
                     <li><a href="/" class="active">Accueil</a></li>
+                    <li><a href="http://localhost:8081/connexion" class="btn-backoffice">Backoffice</a></li>
                 </ul>
             </div>
         </nav>
@@ -65,11 +59,13 @@ $articles = $query->fetchAll();
             <!-- Filter Section -->
             <section class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Rechercher un article..." class="search-input">
-                    <span class="search-icon">🔍</span>
+                    <label for="searchInput" class="sr-only">Rechercher un article</label>
+                    <input type="text" id="searchInput" placeholder="Rechercher un article..." class="search-input" aria-label="Rechercher un article">
+                    <span class="search-icon" aria-hidden="true">🔍</span>
                 </div>
                 <div class="sort-controls">
-                    <select id="sortSelect" class="sort-select">
+                    <label for="sortSelect">Trier par:</label>
+                    <select id="sortSelect" class="sort-select" aria-label="Trier les articles">
                         <option value="recent">Plus récents</option>
                         <option value="old">Plus anciens</option>
                         <option value="alphabetic">Alphabétique (A → Z)</option>
@@ -119,11 +115,11 @@ $articles = $query->fetchAll();
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>À propos</h4>
+                    <h3>À propos</h3>
                     <p>Un site d'information dédié à la couverture de la guerre en Iran avec rigueur et transparence.</p>
                 </div>
                 <div class="footer-section">
-                    <h4>Liens utiles</h4>
+                    <h3>Liens utiles</h3>
                     <ul>
                         <li><a href="/">Accueil</a></li>
                     </ul>

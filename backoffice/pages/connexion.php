@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+// Si l'utilisateur est déjà connecté, le rediriger vers le backoffice
+if (isset($_SESSION['user_id'])) {
+    header('Location: /articles');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>

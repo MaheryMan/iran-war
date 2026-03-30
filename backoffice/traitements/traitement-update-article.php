@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../includes/article_repository.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /pages/articles.php?error=' . rawurlencode('Methode non autorisee.'));
+    header('Location: /articles?error=' . rawurlencode('Methode non autorisee.'));
     exit;
 }
 
@@ -13,7 +13,7 @@ $description = $_POST['description'] ?? '';
 $contenu = $_POST['content'] ?? '';
 
 if ($idArticle <= 0) {
-    header('Location: /pages/articles.php?error=' . rawurlencode('Article invalide.'));
+    header('Location: /articles?error=' . rawurlencode('Article invalide.'));
     exit;
 }
 
@@ -22,9 +22,9 @@ $resultat = mettreAJourArticle($idArticle, $titre, $contenu, $description);
 
 if ($resultat !== true) {
     $message = is_string($resultat) ? $resultat : 'Une erreur est survenue lors de la modification.';
-    header('Location: /pages/edit-article.php?id=' . $idArticle . '&error=' . rawurlencode($message));
+    header('Location: /articles/' . $idArticle . '/editer?error=' . rawurlencode($message));
     exit;
 }
 
-header('Location: /pages/edit-article.php?id=' . $idArticle . '&success=' . rawurlencode('Article modifie avec succes.'));
+header('Location: /articles/' . $idArticle . '/editer?success=' . rawurlencode('Article modifie avec succes.'));
 exit;

@@ -8,5 +8,5 @@ session_unset();
 session_destroy();
 
 // Rediriger vers la page de connexion
-header('Location: /pages/connexion.php');
+header('Location: /connexion');
 exit;

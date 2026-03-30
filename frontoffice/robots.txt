@@ -8,22 +8,7 @@ User-agent: *
 Allow: /
 
 # Dossiers/fichiers à bloquer
-Disallow: /admin/
-Disallow: /backoffice/
-Disallow: /assets/
 Disallow: /includes/
-Disallow: /db/
-Disallow: /*.php$
-Disallow: /pages/
-
-# Paramètres à ignorer
-Disallow: /*?*
-Disallow: /*&*
-
-# Fichiers sensibles
-Disallow: /.env
-Disallow: /.git
-Disallow: /.htaccess
 Disallow: /config.php
 
 # Contrôle du crawl

@@ -1,5 +1,5 @@
 <?php
-require_once '../config.php';
+require_once '../includes/article_repository.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $slug = isset($_GET['slug']) ? $_GET['slug'] : null;
@@ -12,23 +12,10 @@ if (!$id && !$slug) {
 
 // Récupérer l'article par ID en priorité, sinon par slug
 if ($id) {
-    $query = $pdo->prepare('
-        SELECT id, titre_navigation, slug, meta_description, date_creation 
-        FROM articles 
-        WHERE id = ?
-        LIMIT 1
-    ');
-    $query->execute([$id]);
+    $article = getArticleById($id);
 } else {
-    $query = $pdo->prepare('
-        SELECT id, titre_navigation, slug, meta_description, date_creation 
-        FROM articles 
-        WHERE slug = ?
-        LIMIT 1
-    ');
-    $query->execute([$slug]);
+    $article = getArticleBySlug($slug);
 }
-$article = $query->fetch();
 
 if (!$article) {
     header('HTTP/1.0 404 Not Found');
@@ -44,14 +31,7 @@ if ($slug && $article['slug'] !== $slug) {
 }
 
 // Récupérer le contenu de l'article
-$contentQuery = $pdo->prepare('
-    SELECT type_balise, valeur, alt_text, ordre
-    FROM contenus 
-    WHERE article_id = ?
-    ORDER BY ordre ASC
-');
-$contentQuery->execute([$article['id']]);
-$contenus = $contentQuery->fetchAll();
+$contenus = getArticleContentById($article['id']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -74,7 +54,8 @@ $contenus = $contentQuery->fetchAll();
                 </div>
                 <ul class="nav-links">
                     <li><a href="/">Accueil</a></li>
-                    <li><a href="/pages/articles.php">Articles</a></li>
+                    <li><a href="/articles">Articles</a></li>
+                    <li><a href="http://localhost:8081/connexion" class="btn-backoffice">Backoffice</a></li>
                 </ul>
             </div>
         </nav>

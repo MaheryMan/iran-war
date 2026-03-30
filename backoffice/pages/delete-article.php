@@ -2,19 +2,19 @@
 session_start();
 require_once __DIR__ . '/../includes/article_repository.php';
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /pages/connexion.php?error=' . rawurlencode('Veuillez vous connecter pour accéder au backoffice.'));
+    header('Location: /connexion?error=' . rawurlencode('Veuillez vous connecter pour acceder au backoffice.'));
     exit;
 }
 
 $idArticle = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($idArticle <= 0) {
-    header('Location: /pages/articles.php?error=' . rawurlencode('Article invalide.'));
+    header('Location: /articles?error=' . rawurlencode('Article invalide.'));
     exit;
 }
 
 $article = getArticleById($idArticle);
 if (!$article) {
-    header('Location: /pages/articles.php?error=' . rawurlencode("L'article est introuvable."));
+    header('Location: /articles?error=' . rawurlencode("L'article est introuvable."));
     exit;
 }
 
@@ -50,7 +50,7 @@ $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error'], ENT_QUO
         <button type="submit" style="background:#b00020;color:#fff;border:0;padding:10px 14px;cursor:pointer;">
             Oui, supprimer
         </button>
-        <a href="/pages/articles.php" style="margin-left:12px;">Annuler</a>
+            <a href="/articles" style="margin-left:12px;">Annuler</a>
     </form>
 </body>
 </html>
