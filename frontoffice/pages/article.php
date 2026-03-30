@@ -96,7 +96,12 @@ $contenus = $contentQuery->fetchAll();
                     echo '<p>Contenu non disponible</p>';
                 else:
                     foreach ($contenus as $contenu):
-                        echo $contenu['valeur'];
+                        // Ignore seulement les <h1> issus de l'editeur: le titre est deja affiche en haut.
+                        $valeur = (string) ($contenu['valeur'] ?? '');
+                        if (preg_match('/^\s*<h1\b/i', $valeur) === 1) {
+                            continue;
+                        }
+                        echo $valeur;
                     endforeach;
                 endif;
                 ?>

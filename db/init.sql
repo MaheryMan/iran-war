@@ -18,6 +18,8 @@ CREATE TABLE contenus (
 
 CREATE TABLE utilisateurs(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nom_utilisateur VARCHAR(50) NOT NULL UNIQUE,
-    mot_de_passe VARCHAR(255) NOT NULL
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
 );
+
+INSERT INTO utilisateurs (username, password) VALUES ('admin', '$2y$10$iuUHScgpvSBkveav0cIivei3cU/mM.b.ItmAUzKc1iwjddGyuPtAK');

@@ -1,9 +1,16 @@
-
 <?php
+session_start();
+
 $tinyMceApiKey = getenv('TINYMCE_API_KEY') ?: 'no-api-key';
 $tinyMceApiKey = htmlspecialchars($tinyMceApiKey, ENT_QUOTES, 'UTF-8');
 $errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') : '';
 $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success'], ENT_QUOTES, 'UTF-8') : '';
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /pages/connexion.php?error=' . rawurlencode('Veuillez vous connecter pour accéder au backoffice.'));
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -17,6 +24,10 @@ $successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success'], E
 </head>
 <body>
     <h1>Création d'un article</h1>
+  <p>
+    <a href="/pages/articles.php">Voir la liste des articles</a>
+  </p>
+
   <?php if ($errorMessage !== ''): ?>
     <p style="color:#b00020;background:#ffe6e9;padding:10px;border:1px solid #ffb3bd;max-width:900px;">
       <?php echo $errorMessage; ?>
