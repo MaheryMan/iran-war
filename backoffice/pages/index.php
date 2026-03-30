@@ -2,6 +2,8 @@
 <?php
 $tinyMceApiKey = getenv('TINYMCE_API_KEY') ?: 'no-api-key';
 $tinyMceApiKey = htmlspecialchars($tinyMceApiKey, ENT_QUOTES, 'UTF-8');
+$errorMessage = isset($_GET['error']) ? htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') : '';
+$successMessage = isset($_GET['success']) ? htmlspecialchars($_GET['success'], ENT_QUOTES, 'UTF-8') : '';
 ?>
 
 <!DOCTYPE html>
@@ -15,9 +17,25 @@ $tinyMceApiKey = htmlspecialchars($tinyMceApiKey, ENT_QUOTES, 'UTF-8');
 </head>
 <body>
     <h1>Création d'un article</h1>
-    <form action="/traitements/traitement-html.php" method="post">
+  <?php if ($errorMessage !== ''): ?>
+    <p style="color:#b00020;background:#ffe6e9;padding:10px;border:1px solid #ffb3bd;max-width:900px;">
+      <?php echo $errorMessage; ?>
+    </p>
+  <?php endif; ?>
+
+  <?php if ($successMessage !== ''): ?>
+    <p style="color:#0b5d1e;background:#e7f8eb;padding:10px;border:1px solid #b4e3bf;max-width:900px;">
+      <?php echo $successMessage; ?>
+    </p>
+  <?php endif; ?>
+
+  <form id="articleForm" action="/traitements/traitement-html.php" method="post">
         <label for="title">Titre de l'article:</label><br>
         <input type="text" id="title" name="title" required><br><br>
+
+        <label for="description">Description de l'article:</label><br>
+        <textarea id="description" name="description"></textarea><br><br>
+
 
         <label for="content">Contenu de l'article:</label><br>
         <textarea id="content" name="content" required></textarea><br><br>
@@ -30,6 +48,10 @@ $tinyMceApiKey = htmlspecialchars($tinyMceApiKey, ENT_QUOTES, 'UTF-8');
     selector: '#content',
     height: 500,
     menubar: true,
+    image_title: true,
+    automatic_uploads: true,
+    // Use an absolute path because this page lives under /pages/
+    images_upload_url: '/upload_handler.php',
 
     // Plugins principaux (ajuste selon ton besoin)
     plugins: [
@@ -63,6 +85,29 @@ $tinyMceApiKey = htmlspecialchars($tinyMceApiKey, ENT_QUOTES, 'UTF-8');
       });
     }
   });
+
+  const form = document.getElementById('articleForm');
+  if (form) {
+    form.addEventListener('submit', function (event) {
+      const editor = tinymce.get('content');
+      if (!editor) {
+        return;
+      }
+
+      const html = editor.getContent();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const images = doc.querySelectorAll('img');
+
+      for (const img of images) {
+        const alt = (img.getAttribute('alt') || '').trim();
+        if (!alt) {
+          event.preventDefault();
+          alert("Avertissement : ajoute un texte alternatif (alt) a chaque image avant d'enregistrer.");
+          return;
+        }
+      }
+    });
+  }
 </script>
 </body>     
 </html>

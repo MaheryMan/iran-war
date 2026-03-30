@@ -2,3 +2,5 @@
 .env
 .env.*
 !.env.example
+uploads/20260330_062010_1774851619377.jpg
+/uploads

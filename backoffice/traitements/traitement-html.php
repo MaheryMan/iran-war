@@ -1,11 +1,41 @@
 <?php
 $contenu = $_POST['content'] ?? '';
 $titre = $_POST['title'] ?? '';
+$description = $_POST['description'] ?? '';
 
 include '../includes/connexDB.php';
 
+$description = $titre.' - '.$description;
 
-insererArticle($titre, $contenu);
+$resultat = insererArticle($titre, $contenu, $description);
+
+if ($resultat !== true) {
+    $message = is_string($resultat) ? $resultat : "Une erreur est survenue lors de l'enregistrement.";
+    header('Location: /pages/index.php?error=' . rawurlencode($message));
+    exit;
+}
+
+header('Location: /pages/index.php?success=' . rawurlencode("Article cree avec succes."));
+exit;
+
+function verifierImagesAvecAlt($contenu)
+{
+    $dom = new DOMDocument();
+    @$dom->loadHTML(mb_convert_encoding($contenu, 'HTML-ENTITIES', 'UTF-8'));
+
+    $images = $dom->getElementsByTagName('img');
+    foreach ($images as $image) {
+        if (!($image instanceof DOMElement)) {
+            continue;
+        }
+        $alt = trim($image->getAttribute('alt'));
+        if ($alt === '') {
+            return "Avertissement : chaque image doit avoir un texte alternatif (attribut alt).";
+        }
+    }
+
+    return true;
+}
 
 function insererContenuByidArticle($idArticle, $contenu)
 {
@@ -62,16 +92,42 @@ function insererContenuByidArticle($idArticle, $contenu)
     }
 }
 
-function insererArticle($titre, $contenus)
+function insererArticle($titre, $contenus, $description)
 {
     global $pdo;
 
-    $slug = genererSlug($titre);
-    $sql = "INSERT INTO articles (titre_navigation, slug) VALUES (:titre, :slug)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['titre' => $titre, 'slug' => $slug]);
-    $idArticle = $pdo->lastInsertId();
-    return insererContenuByidArticle($idArticle, $contenus);
+    if (trim($titre) === '' || trim($contenus) === '' || trim($description) === '') {
+        return "Le titre, la description et le contenu sont obligatoires.";
+    }
+
+    $validationAlt = verifierImagesAvecAlt($contenus);
+    if ($validationAlt !== true) {
+        return $validationAlt;
+    }
+
+    try {
+        $pdo->beginTransaction();
+
+        $slug = genererSlug($titre);
+        $sql = "INSERT INTO articles (titre_navigation, slug, meta_description) VALUES (:titre, :slug, :meta_description)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['titre' => $titre, 'slug' => $slug, 'meta_description' => $description]);
+        $idArticle = $pdo->lastInsertId();
+
+        $resultatContenu = insererContenuByidArticle($idArticle, $contenus);
+        if ($resultatContenu !== null && $resultatContenu !== true) {
+            $pdo->rollBack();
+            return $resultatContenu;
+        }
+
+        $pdo->commit();
+        return true;
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        return "Une erreur est survenue lors de l'enregistrement.";
+    }
 }
 function getArticleById($id)
 {
@@ -110,5 +166,3 @@ function genererSlug($titre)
 
     return trim($slug, '-');
 }
-
-header('Location: /pages/index.php');

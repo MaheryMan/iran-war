@@ -32,6 +32,7 @@ services:
     volumes:
       - ./frontoffice:/var/www/html:rw
       - ./docker/frontoffice.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - ./uploads:/var/www/html/public/images:rw # Le pont vers les images
     environment:
       DB_HOST: db
       DB_NAME: iran_war
@@ -56,6 +57,7 @@ services:
     volumes:
       - ./backoffice:/var/www/html:rw
       - ./docker/backoffice.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - ./uploads:/var/www/html/public/images:rw
     environment:
       DB_HOST: db
       DB_NAME: iran_war

@@ -16,3 +16,8 @@ CREATE TABLE contenus (
     FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE
 );
 
+CREATE TABLE utilisateurs(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom_utilisateur VARCHAR(50) NOT NULL UNIQUE,
+    mot_de_passe VARCHAR(255) NOT NULL
+);
