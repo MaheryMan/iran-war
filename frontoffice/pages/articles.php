@@ -120,11 +120,11 @@ $categories = getCategories();
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>À propos</h3>
+                    <h2>À propos</h2>
                     <p>Un site d'information dédié à la couverture de la guerre en Iran avec rigueur et transparence.</p>
                 </div>
                 <div class="footer-section">
-                    <h3>Liens utiles</h3>
+                    <h2>Liens utiles</h2>
                     <ul>
                         <li><a href="/">Accueil</a></li>
                     </ul>
