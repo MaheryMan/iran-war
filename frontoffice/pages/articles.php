@@ -4,7 +4,11 @@ header('Content-Type: text/html; charset=utf-8');
 
 $articles = getAllArticles();
 $categories = getCategories();
+
 ?>
+<?php $version = filemtime('style.css'); ?>
+<?php $version1 = filemtime('articles-list.css'); ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -12,8 +16,8 @@ $categories = getCategories();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guerre en Iran - Articles et Actualités</title>
     <meta name="description" content="Découvrez nos articles de fond sur la guerre en Iran: analyses, reportages, chronologies et documents inédits.">
-    <link rel="stylesheet" href="/assets/style.css">
-    <link rel="stylesheet" href="/assets/articles-list.css">
+    <link rel="stylesheet" href="/assets/style.css?v=<?php echo $version; ?>">
+    <link rel="stylesheet" href="/assets/articles-list.css?v=<?php echo $version1; ?>">
 </head>
 <body>
     <!-- Header -->
@@ -63,7 +67,8 @@ $categories = getCategories();
                 <div class="search-box">
                     <label for="searchInput" class="sr-only">Rechercher un article</label>
                     <input type="text" id="searchInput" placeholder="Rechercher un article..." class="search-input" aria-label="Rechercher un article">
-                    <span class="search-icon" aria-hidden="true">🔍</span>
+                    <!-- image de loupe pour le champ de recherche -->
+                    <span class="search-icon" aria-hidden="true"><img class="loupe" src="../assets/images/glassmagnifiermagnifyingsearchsearchingweb_123111.svg" alt="Rechercher" width="20" height="20"></span>
                 </div>
                 <div class="sort-controls">
                     <label for="categorySelect">Filtrer par catégorie:</label>

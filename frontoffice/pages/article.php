@@ -41,6 +41,8 @@ if (($slug && $article['slug'] !== $slug) ||
 // Récupérer le contenu de l'article
 $contenus = getArticleContentById($article['id']);
 ?>
+<?php $version = filemtime('style.css'); ?>
+<?php $version1 = filemtime('article.css'); ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -48,8 +50,8 @@ $contenus = getArticleContentById($article['id']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($article['titre_navigation']); ?> - Iran War</title>
     <meta name="description" content="<?php echo htmlspecialchars($article['meta_description']); ?>">
-    <link rel="stylesheet" href="/assets/style.css">
-    <link rel="stylesheet" href="/assets/article.css">
+    <link rel="stylesheet" href="/assets/style.css?v=<?php echo $version; ?>">
+    <link rel="stylesheet" href="/assets/article.css?v=<?php echo $version1; ?>">
 </head>
 <body>
     <!-- Header -->
