@@ -121,7 +121,7 @@ function insererContenuByIdArticle($idArticle, $contenu)
     return true;
 }
 
-function insererArticle($titre, $contenu, $description)
+function insererArticle($titre, $contenu, $description, $categoryId = null)
 {
     global $pdo;
 
@@ -138,12 +138,14 @@ function insererArticle($titre, $contenu, $description)
         $pdo->beginTransaction();
 
         $slug = genererSlugUnique($titre);
-        $sql = 'INSERT INTO articles (titre_navigation, slug, meta_description) VALUES (:titre, :slug, :meta_description)';
+        $categoryId = ($categoryId !== null && (int) $categoryId > 0) ? (int) $categoryId : null;
+        $sql = 'INSERT INTO articles (titre_navigation, slug, meta_description, category_id) VALUES (:titre, :slug, :meta_description, :category_id)';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'titre' => $titre,
             'slug' => $slug,
             'meta_description' => $description,
+            'category_id' => $categoryId,
         ]);
 
         $idArticle = (int) $pdo->lastInsertId();
@@ -163,7 +165,7 @@ function insererArticle($titre, $contenu, $description)
     }
 }
 
-function mettreAJourArticle($idArticle, $titre, $contenu, $description)
+function mettreAJourArticle($idArticle, $titre, $contenu, $description, $categoryId = null)
 {
     global $pdo;
 
@@ -192,12 +194,14 @@ function mettreAJourArticle($idArticle, $titre, $contenu, $description)
         }
 
         $slug = genererSlugUnique($titre, $idArticle);
-        $sql = 'UPDATE articles SET titre_navigation = :titre, slug = :slug, meta_description = :meta_description WHERE id = :id';
+        $categoryId = ($categoryId !== null && (int) $categoryId > 0) ? (int) $categoryId : null;
+        $sql = 'UPDATE articles SET titre_navigation = :titre, slug = :slug, meta_description = :meta_description, category_id = :category_id WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'titre' => $titre,
             'slug' => $slug,
             'meta_description' => $description,
+            'category_id' => $categoryId,
             'id' => $idArticle,
         ]);
 
@@ -248,7 +252,7 @@ function getArticleById($id)
 {
     global $pdo;
 
-    $sql = 'SELECT * FROM articles WHERE id = :id';
+    $sql = 'SELECT a.*, c.libelle as category_name FROM articles a LEFT JOIN categories c ON a.category_id = c.id WHERE a.id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -258,7 +262,16 @@ function getAllArticles()
 {
     global $pdo;
 
-    $sql = 'SELECT * FROM articles ORDER BY date_creation DESC';
+    $sql = 'SELECT a.*, c.libelle as category_name FROM articles a LEFT JOIN categories c ON a.category_id = c.id ORDER BY a.date_creation DESC';
+    $stmt = $pdo->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getCategories()
+{
+    global $pdo;
+
+    $sql = 'SELECT id, libelle FROM categories ORDER BY libelle ASC';
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

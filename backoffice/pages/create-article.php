@@ -1,5 +1,7 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=utf-8');
+require_once __DIR__ . '/../includes/article_repository.php';
 
 $tinyMceApiKey = getenv('TINYMCE_API_KEY') ?: 'no-api-key';
 $tinyMceApiKey = htmlspecialchars($tinyMceApiKey, ENT_QUOTES, 'UTF-8');
@@ -11,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$categories = getCategories();
 ?>
 
 <!DOCTYPE html>
@@ -85,6 +88,18 @@ if (!isset($_SESSION['user_id'])) {
                     aria-describedby="description-help"
                 ></textarea>
                 <small class="text-muted">Utilisée pour le SEO et les résultats de recherche</small>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Catégorie</label>
+                <select id="category" name="category">
+                    <option value="">Aucune catégorie</option>
+                    <?php foreach ($categories as $categorie): ?>
+                        <option value="<?php echo (int) $categorie['id']; ?>">
+                            <?php echo htmlspecialchars($categorie['libelle'], ENT_QUOTES, 'UTF-8'); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <div class="form-group">

@@ -3,12 +3,13 @@
 $contenu = $_POST['content'] ?? '';
 $titre = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? '';
+$categoryId = isset($_POST['category']) ? (int) $_POST['category'] : null;
 
 require_once __DIR__ . '/../includes/article_repository.php';
 
 $description = $titre . ' - ' . $description;
 
-$resultat = insererArticle($titre, $contenu, $description);
+$resultat = insererArticle($titre, $contenu, $description, $categoryId);
 
 if ($resultat !== true) {
     $message = is_string($resultat) ? $resultat : "Une erreur est survenue lors de l'enregistrement.";

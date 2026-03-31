@@ -1,10 +1,13 @@
 <?php
 require_once '../includes/article_repository.php';
+header('Content-Type: text/html; charset=utf-8');
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $slug = isset($_GET['slug']) ? $_GET['slug'] : null;
+$categorySlug = isset($_GET['category_slug']) ? $_GET['category_slug'] : null;
+$categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
 
-// Prioriser l'ID pour la recherche (le slug peut changer)
+// Prioriser l'ID pour la recherche
 if (!$id && !$slug) {
     header('Location: /');
     exit;
@@ -22,11 +25,16 @@ if (!$article) {
     exit('Article non trouvé');
 }
 
-// Si le slug en URL ne correspond pas au slug en base, rediriger vers la bonne URL
-if ($slug && $article['slug'] !== $slug) {
+// Vérifier et rediriger si les slugs ne correspondent pas
+$correctCategorySlug = $article['category_slug'] ?? 'sans-categorie';
+$correctCategoryId = (int) ($article['category_id'] ?? 0);
+
+if (($slug && $article['slug'] !== $slug) || 
+    ($categorySlug && $categorySlug !== $correctCategorySlug) || 
+    ($categoryId && $categoryId !== $correctCategoryId)) {
     $date = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d', strtotime($article['date_creation']));
     $dateParts = explode('-', $date);
-    header('Location: /' . $dateParts[0] . '/' . $dateParts[1] . '/' . $dateParts[2] . '/' . $article['slug'] . '_' . $article['id'] . '.html');
+    header('Location: /' . $correctCategorySlug . '/' . $dateParts[0] . '/' . $dateParts[1] . '/' . $dateParts[2] . '/' . $article['slug'] . '_' . $article['id'] . '_' . $correctCategoryId . '.html');
     exit;
 }
 
@@ -67,6 +75,9 @@ $contenus = getArticleContentById($article['id']);
             <div class="article-header-full">
                 <h1><?php echo htmlspecialchars($article['titre_navigation']); ?></h1>
                 <div class="article-meta-full">
+                    <?php if (!empty($article['category_name'])): ?>
+                        <span class="category"><?php echo htmlspecialchars($article['category_name'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php endif; ?>
                     <span class="date">Publié le <?php echo date('d F Y', strtotime($article['date_creation'])); ?></span>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 
 // Si l'utilisateur est déjà connecté, le rediriger vers le backoffice
 if (isset($_SESSION['user_id'])) {

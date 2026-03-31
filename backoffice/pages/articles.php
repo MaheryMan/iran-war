@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 require_once __DIR__ . '/../includes/article_repository.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -66,6 +67,7 @@ $articles = getAllArticles();
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Titre</th>
+                            <th scope="col">Catégorie</th>
                             <th scope="col">Slug</th>
                             <th scope="col">Date de création</th>
                             <th scope="col">Actions</th>
@@ -76,6 +78,7 @@ $articles = getAllArticles();
                             <tr>
                                 <td><?php echo (int) $article['id']; ?></td>
                                 <td><?php echo htmlspecialchars($article['titre_navigation'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($article['category_name'] ?? '-', ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><code><?php echo htmlspecialchars($article['slug'], ENT_QUOTES, 'UTF-8'); ?></code></td>
                                 <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime($article['date_creation'])), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
